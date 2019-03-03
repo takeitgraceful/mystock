@@ -1,41 +1,24 @@
 run.config:
   engine: nodejs
-  engine.config:
-    runtime:
-  cache_dirs:
-    - .bundle
 
-  build_triggers:
-    - Gemfile
-    - Gemfile.lock
-
+  # add nginx package
   extra_packages:
-    - pkgconf
-    - libxml2
-    - libxslt
-    - nodejs
     - nginx
-    - zlib
 
-web.main:
-  start:
-    nginx: nginx -c /app/config/nginx.conf
-    puma: bundle exec puma -C /app/config/puma.rb
-  writable_dirs:
-    - tmp
-    - log
-  ports:
-    - tcp:4444:4444
-
+# add a postgres database
 data.db:
   image: nanobox/postgresql:9.6
 
-deploy.config:
-  extra_steps:
-    - ""
-  before_live:
-    web.main:
-      - bundle exec rake db:setup_or_migrate
+# add a web component and give it a "start" command
+web.main:
+  start:
+    nginx: nginx -c /app/config/nginx.conf
+    node: npm start
+    puma: bundle exec puma -C /app/config/puma.rb
+  writable_dirs:
+        - tmp
+        - log
 
-#data.redis:
-#  image: nanobox/redis:3.0
+# add a worker component and give it a "start" command
+# worker.main:
+#   start: node worker.js
