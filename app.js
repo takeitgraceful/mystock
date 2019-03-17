@@ -1,11 +1,10 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const dashboardRouter = require("./routes/dashboard");
+const publicRouter = require("./routes/public");
 
 var app = express();
 
@@ -16,11 +15,10 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', publicRouter);
+app.use('/dashboard', dashboardRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -37,5 +35,26 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+//adding okta authentication
+
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var logger = require('morgan');
+var session = require("express-session");
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'heyhey991u3jitsthebest232mpPPJDBQ',
+  resave: true,
+  saveUninitialized: false
+}));
+
+//end okta authentication
+
 
 module.exports = app;
