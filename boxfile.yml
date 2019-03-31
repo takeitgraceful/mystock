@@ -6,15 +6,20 @@ run.config:
     - nginx
 
 # add a postgres database
-data.db:
-  image: nanobox/postgresql:9.6
+data.mongodb:
+  image: nanobox/mongodb:3.0
+
+
+  # optional mongodb configs
+  config:
+    objcheck: true
+    log_verbosity: 'v'
 
 # add a web component and give it a "start" command
 web.main:
   start:
     nginx: nginx -c /app/config/nginx.conf
     node: npm start
-    puma: bundle exec puma -C /app/config/puma.rb
   writable_dirs:
         - tmp
         - log

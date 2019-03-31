@@ -1,118 +1,84 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var session = require('express-session');
-var okta = require("@okta/okta-sdk-nodejs");
-var ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
+var http = require('http'),
+    path = require('path'),
+    methods = require('methods'),
+    express = require('express'),
+    bodyParser = require('body-parser'),
+    session = require('express-session'),
+    cors = require('cors'),
+    passport = require('passport'),
+    errorhandler = require('errorhandler'),
+    mongoose = require('mongoose');
 
-app.use(session({
-  secret: 'asdf;lkjh3lkjh235l23h5l235kjh',
-  resave: true,
-  saveUninitialized: false
-}));
-app.use(oidc.router);
+var isProduction = process.env.NODE_ENV === 'production';
 
-app.use((req, res, next) => {
-  if (!req.userinfo) {
-    return next();
-  }
+// Create global app object
+var app = express();
 
-  oktaClient.getUser(req.userinfo.sub)
-    .then(user => {
-      req.user = user;
-      res.locals.user = user;
-      next();
-    }).catch(err => {
-      next(err);
-    });
-});
+app.use(cors());
 
-function loginRequired(req, res, next) {
-  if (!req.user) {
-    return res.status(401).render("unauthenticated");
-  }
+// Normal express config defaults
+app.use(require('morgan')('dev'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-  next();
+app.use(require('method-override')());
+app.use(express.static(__dirname + '/public'));
+
+app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
+
+if (!isProduction) {
+  app.use(errorhandler());
 }
 
-const dashboardRouter = require("./routes/dashboard");
-const publicRouter = require("./routes/public");
-const usersRouter = require("./routes/users");
+if(isProduction){
+  mongoose.connect(process.env.MONGODB_URI);
+} else {
+  mongoose.connect('mongodb://localhost/conduit');
+  mongoose.set('debug', true);
+}
 
+require('./models/User');
+require('./models/Article');
+require('./models/Comment');
+require('./config/passport');
 
-var app = express();
-var oktaClient = new okta.Client({
-  orgUrl: 'dev-428778.okta.com',
-  token: '000i-7WBb0eWkYYOQYzmrHtm1iUm9wZVDWKbJb6lXn'
-});
-const oidc = new ExpressOIDC({
-  issuer: "dev-428778.okta.com/oauth2/default",
-  client_id: "0oacgt1iiTRkrkhVB356",
-  client_secret: "FqxxRV_DhkHe4uYD1qD_sXOkTjcQGkXlMHfWhxGg",
-  redirect_uri: 'http://localhost:3000/users/callback',
-  scope: "openid profile",
-  routes: {
-    login: {
-      path: "/users/login"
-    },
-    callback: {
-      path: "/users/callback",
-      defaultRedirect: "/dashboard"
-    }
-  }
-});
+app.use(require('./routes'));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', publicRouter);
-app.use('/dashboard', loginRequired, dashboardRouter);
-app.use('/users', usersRouter);
-
-
-// catch 404 and forward to error handler
+/// catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-// error handler
+/// error handlers
+
+// development error handler
+// will print stacktrace
+if (!isProduction) {
+  app.use(function(err, req, res, next) {
+    console.log(err.stack);
+
+    res.status(err.status || 500);
+
+    res.json({'errors': {
+      message: err.message,
+      error: err
+    }});
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({'errors': {
+    message: err.message,
+    error: {}
+  }});
 });
 
-//adding okta authentication
-
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var session = require("express-session");
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-  secret: 'heyhey991u3jitsthebest232mpPPJDBQ',
-  resave: true,
-  saveUninitialized: false
-}));
-
-//end okta authentication
-
-
-module.exports = app;
+// finally, let's start our server...
+var server = app.listen( process.env.PORT || 3000, function(){
+  console.log('Listening on port ' + server.address().port);
+});
