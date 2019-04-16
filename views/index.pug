@@ -1,5 +1,9 @@
-extends layout
+include partials/header
 
-block content
-  h1= title
-  p Welcome to #{title}
+.container-fluid
+	.container
+		div.col-md-6.offset-md-3
+			h3.text-center Home
+			
+	br
+	include partials/footer

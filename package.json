@@ -1,43 +1,35 @@
 {
-  "name": "conduit-node",
-  "version": "1.0.0",
-  "description": "conduit on node",
-  "main": "app.js",
+  "author": "Tim Tamimi (http://www.ttamimi.co.uk)",
+  "name": "Passport.js-Template",
+  "description": "TBC",
+  "version": "0.0.1",
+  "homepage": "",
   "scripts": {
-    "mongo:start": "docker run --name realworld-mongo -p 27017:27017 mongo & sleep 5",
-    "start": "node ./app.js",
-    "dev": "nodemon ./app.js",
-    "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
-    "stop": "lsof -ti :3000 | xargs kill",
-    "mongo:stop": "docker stop realworld-mongo && docker rm realworld-mongo"
+    "start": "nodemon app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gothinkster/productionready-node-api.git"
+  "engines": {
+    "node": "~8.9.4"
   },
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "1.15.0",
-    "cors": "2.7.1",
-    "ejs": "2.4.1",
-    "errorhandler": "1.4.3",
-    "express": "4.13.4",
-    "express-jwt": "3.3.0",
-    "express-session": "1.13.0",
-    "jsonwebtoken": "7.1.9",
-    "method-override": "2.3.5",
-    "methods": "1.1.2",
-    "mongoose": "4.4.10",
-    "mongoose-unique-validator": "1.0.2",
-    "morgan": "1.7.0",
-    "passport": "0.3.2",
-    "passport-local": "1.0.0",
-    "request": "2.69.0",
-    "slug": "0.9.1",
-    "underscore": "1.8.3"
+    "bcrypt": "^2.0.1",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.4",
+    "express-flash": "0.0.2",
+    "express-session": "^1.15.6",
+    "jQuery": "^1.7.4",
+    "jquery": "^3.3.1",
+    "mongodb": "^3.0.7",
+    "node-gyp": "^3.6.2",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pg": "^7.4.1",
+    "pug": "^2.0.0-rc.3",
+    "request": "^2.83.0",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "newman": "^3.8.2",
     "nodemon": "^1.11.0"
   }
 }

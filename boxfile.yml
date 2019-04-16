@@ -6,8 +6,8 @@ run.config:
     - nginx
 
 # add a postgres database
-data.mongodb:
-  image: nanobox/mongodb:3.0
+data.db:
+  image: nanobox/postgresql:9.6
 
 
   # optional mongodb configs
