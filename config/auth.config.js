@@ -1,3 +1,3 @@
 module.exports = {
-  secret: "mystock-secret-key"
+  secret: "S5E$&JJPnT(cQuS"
 };
