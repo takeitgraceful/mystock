@@ -1,44 +1,27 @@
 {
   "name": "mystock",
   "version": "1.0.0",
-  "description": "description: Node.js + MongoDB: JWT Authentication & Authorization",
+  "description": "Mern Auth Example",
   "main": "server.js",
-  "directories": {
-    "doc": "docs",
-    "lib": "lib",
-    "test": "tests"
+  "scripts": {
+  "client-install": "npm install --prefix client",
+  "start": "node server.js",
+  "server": "nodemon server.js",
+  "client": "npm start --prefix client",
+  "dev": "concurrently \"npm run server\" \"npm run client\""
   },
+  "author": "mystock",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "core-util-is": "^1.0.2",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-validator": "^6.4.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.5.5",
-    "mongoose": "^5.9.7",
-    "webpack-dev-server": "^4.0.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/takeitgraceful/mystock.git"
-  },
-  "keywords": [
-    "node.js",
-    "express",
-    "jwt",
-    "authentication",
-    "mongodb"
-  ],
-  "author": "bezkoder",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/takeitgraceful/mystock/issues"
-  },
-  "homepage": "https://github.com/takeitgraceful/mystock#readme"
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.0.1",
+    "express": "^4.16.4",
+    "is-empty": "^1.2.0",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.3.11",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "validator": "^10.9.0"
+  }
 }
