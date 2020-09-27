@@ -1,7 +1,7 @@
 {
   "name": "mystock",
   "version": "1.0.0",
-  "description": "Mern Auth Example",
+  "description": "The Encouragement Engine",
   "main": "server.js",
   "scripts": {
       "client-install": "npm install --prefix client",
