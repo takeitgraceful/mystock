@@ -1,3 +1,5 @@
+//test before client-server split
+
 {
   "name": "mystock",
   "version": "1.0.0",
